@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-2xl font-bold text-blue-800 mb-6 border-b pb-2">Historique des ventes</h2>
+
+<table class="min-w-full bg-white shadow-sm rounded-lg overflow-hidden table-hover">
+    <thead>
+        <tr class="bg-blue-100 text-blue-700 uppercase text-xs">
+            <th class="py-3 px-4 text-left font-semibold">ID Vente</th>
+            <th class="py-3 px-4 text-left font-semibold">Date</th>
+            <th class="py-3 px-4 text-left font-semibold">Total</th>
+            <th class="py-3 px-4 text-left font-semibold">Articles vendus</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vente in ventes %}
+        <tr class="border-b border-blue-200 hover:bg-blue-50 transition">
+            <td class="py-3 px-4">{{ vente.id_vente }}</td>
+            <td class="py-3 px-4">{{ vente.date_vente.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td class="py-3 px-4">{{ vente.total }} FCFA</td>
+            <td class="py-3 px-4">
+                <ul>
+                    {% for vente_article in vente.articles_vendus %}
+                    <li>{{ vente_article.article.nom }} ({{ vente_article.quantite_vendue }} x {{ vente_article.prix_unitaire }} FCFA)</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

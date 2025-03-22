@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Stock</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .btn-primary {
+            background-color: #4f46e5;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background-color: #10b981;
+            transition: all 0.3s;
+        }
+        .btn-success:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-warning {
+            background-color: #f59e0b;
+            transition: all 0.3s;
+        }
+        .btn-warning:hover {
+            background-color: #d97706;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            transition: all 0.3s;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        .table-hover tr:hover {
+            background-color: #f3f4f6;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="bg-blue-50 min-h-screen">
+    <div class="container mx-auto p-4 mt-8">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 fade-in">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6 border-b pb-2">Stock actuel</h2>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <a href="/ajouter" class="btn-success text-white px-6 py-3 rounded-lg shadow-md flex items-center">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Ajouter un article
+                </a>
+                <a href="/vendre" class="btn-warning text-white px-6 py-3 rounded-lg shadow-md flex items-center">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    Vendre un article
+                </a>
+                <a href="/consulter" class="btn-primary text-white px-6 py-3 rounded-lg shadow-md flex items-center">
+                    <i class="fas fa-search mr-2"></i>
+                    Consulter le stock
+                </a>
+            </div>
+
+            <div class="overflow-x-auto bg-blue-50 rounded-lg p-2">
+                <div class="flex justify-between mb-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Rechercher un article..." class="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        <i class="fas fa-search absolute left-3 top-3 text-blue-400"></i>
+                    </div>
+                </div>
+                
+                <table class="min-w-full bg-white shadow-sm rounded-lg overflow-hidden table-hover">
+                    <thead>
+                        <tr class="bg-blue-100 text-blue-700 uppercase text-xs">
+                            <th class="py-3 px-4 text-left font-semibold">ID</th>
+                            <th class="py-3 px-4 text-left font-semibold">Nom de l'article</th>
+                            <th class="py-3 px-4 text-left font-semibold">Quantité</th>
+                            <th class="py-3 px-4 text-left font-semibold">Prix unitaire</th>
+                            <th class="py-3 px-4 text-center font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in articles %}
+                        <tr class="border-b border-blue-200 hover:bg-blue-50 transition">
+                            <td class="py-3 px-4 text-blue-600">{{ article.id }}.</td>
+                            <td class="py-3 px-4 font-medium text-blue-800">{{ article.nom }}</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold 
+                                    {% if article.quantite > 10 %}
+                                        bg-green-100 text-green-800
+                                    {% elif article.quantite > 0 %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-red-100 text-red-800
+                                    {% endif %}
+                                ">
+                                    {{ article.quantite }}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 font-semibold text-green-600">{{ article.prix }} FCFA</td>
+                            <td class="py-3 px-4 text-center flex justify-center gap-2">
+                                <a href="/modifier/{{ article.id }}" class="btn-primary text-white px-3 py-1 rounded-md text-sm" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="POST" action="/supprimer/{{ article.id }}" class="inline">
+                                    <button type="submit" class="btn-danger text-white px-3 py-1 rounded-md text-sm" title="Supprimer"
+                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                               
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                    
+                    </tbody>
+                </table>
+ 
+            </div>
+        </div>
+    
+    </div>
+
+
+
+    <script>
+        // Script pour confirmation de suppression
+        function confirmDelete(id) {
+            return confirm("Êtes-vous sûr de vouloir supprimer cet article?");
+        }
+    </script>
+</body>
+</html>
+{% endblock %}
